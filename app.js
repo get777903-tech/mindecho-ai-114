@@ -886,6 +886,16 @@ function playMP3AudioTrack(forceStart = false) {
   }
 }
 
+// Quick Test Audio Button Handler
+function playQuickTestAudio() {
+  const playerCard = document.querySelector('.player-card') || document.getElementById('generator');
+  if (playerCard) {
+    playerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  playMP3AudioTrack(true);
+  logClickAnalytics('QuickTestAudio_Clicked', 'Hero Quick Test Button', 0);
+}
+
 function togglePlayAudio() {
   if (appState.isPlayingAudio) {
     if (appState.audioTrack) appState.audioTrack.pause();
