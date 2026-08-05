@@ -66,20 +66,10 @@
     <div class="hero-glow hero-glow-2"></div>
     <div class="container hero-container">
       <div class="hero-content">
-        <!-- Top Action Button: Быстрое тестирование рассказа-медитации -->
+        <!-- Top Action Button: Быстрое тестирование рассказа-медитации (Включает аудиозапись!) -->
         <div style="margin-bottom: 8px;">
-          <button class="btn btn-primary btn-lg btn-orange btn-block" onclick="scrollToSection('generator')" style="font-weight: 700; font-size: 16px; padding: 12px 18px; box-shadow: 0 8px 25px rgba(255, 107, 0, 0.5);">
-            ✨ Быстрое тестирование рассказа-медитации
-          </button>
-        </div>
-
-        <!-- 2 Side-by-Side Buttons on One Line: Развивающие игры & Создание молитвы-медитации -->
-        <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
-          <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 160px; text-align: center; justify-content: center; text-decoration: none; padding: 10px 12px; font-weight: 700; background: rgba(37, 99, 235, 0.25); border: 1px solid rgba(6, 182, 212, 0.4); color: #fff;">
-            🎮 Развивающие игры
-          </a>
-          <button class="btn btn-primary btn-md btn-orange" onclick="scrollToSection('generator')" style="flex: 1; min-width: 160px; justify-content: center; padding: 10px 12px; font-weight: 700;">
-            🙏 Создание молитвы-медитации
+          <button class="btn btn-primary btn-lg btn-orange btn-block" onclick="playQuickTestAudio()" style="font-weight: 700; font-size: 16px; padding: 12px 18px; box-shadow: 0 8px 25px rgba(255, 107, 0, 0.5);">
+            ▶️ Быстрое тестирование рассказа-медитации (Включить аудио)
           </button>
         </div>
 
@@ -94,13 +84,20 @@
           Мы создаем глобальное технологическое решение для защиты ментального здоровья семей. Легальный способ сохранить эмоциональные ресурсы родителей и вырастить счастливого ребенка.
         </p>
 
-        <div class="hero-buttons" style="margin-bottom: 14px; gap: 10px;">
+        <div class="hero-buttons" style="margin-bottom: 14px; gap: 10px; display: flex; flex-direction: column;">
           <button class="btn btn-primary btn-lg btn-orange" onclick="scrollToSection('modes')" data-i18n="btn_try_free">
             ✨ Попробовать! Рассказ-медитация мягко исцеляет дневные стрессы, обиды и страхи ребенка прямо в процессе засыпания и с утра
           </button>
-          <button class="btn btn-secondary btn-lg" onclick="openAuthModal('donation')" data-i18n="btn_support_project">
-            [ Поддержать проект / Получить ссылку ]
-          </button>
+
+          <!-- Перемещенные 2 кнопки на одной строчке ВМЕСТО "Поддержать проект / получить ссылку" -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 160px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 16px; font-weight: 700; background: rgba(37, 99, 235, 0.25); border: 1px solid rgba(6, 182, 212, 0.4); color: #fff;">
+              🎮 Развивающие игры
+            </a>
+            <button class="btn btn-primary btn-md btn-orange" onclick="scrollToSection('generator')" style="flex: 1; min-width: 160px; justify-content: center; padding: 12px 16px; font-weight: 700;">
+              🙏 Создание молитвы-медитации
+            </button>
+          </div>
         </div>
 
         <!-- Trust Badges -->
