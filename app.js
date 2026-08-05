@@ -1189,8 +1189,13 @@ function handleCustDevSubmit(e) {
   alert("🎉 Спасибо за ваши ответы! Ответы записаны. Вам предоставлен приоритетный VIP-доступ.");
   closeCustDevModal();
 
+  const contact = document.getElementById('cd-input-contact')?.value || '-';
+  const isEmail = contact.includes('@');
+
   logClickAnalytics('CustDev_Submitted', appState.currentCustDevScenario, 0, {
-    custdev_answers: answers.join(" | ")
+    section: answers.join(" | "), // Packing answers here so Google Sheets saves them
+    email: isEmail ? contact : '-',
+    phone: !isEmail ? contact : '-'
   });
 }
 
