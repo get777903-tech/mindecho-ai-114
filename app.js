@@ -782,6 +782,8 @@ function generatePersonalMeditation() {
   const gender = document.getElementById('child-gender').value;
   const audioSource = document.getElementById('audio-mode-source').value;
 
+  logClickAnalytics('Generate_Click', '-', 0, { section: 'generator' });
+
   const isGirl = (gender === 'girl');
   let customText = "";
 
