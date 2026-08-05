@@ -1,2 +1,2 @@
-# mindecho-ai-114
-MindEcho AI - Subscription, Google/Apple Auth and Terms Signing (v114)
+# mindecho-ai-113
+MindEcho AI - Subscription, Google/Apple Auth and DSCLAIMER Signing (v113)
