@@ -114,7 +114,7 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 <div class="panel-title"><span>🖱</span>Таблица: Абсолютно ВСЕ клики на сайте (по кнопкам)</div>
 <div class="table-wrap">
 <table>
-<thead><tr><th>Надпись на кнопке (Текст)</th><th>Количество кликов</th><th>Системное Событие</th></tr></thead>
+<thead><tr><th>Название кнопки</th><th>Количество</th><th>Диаграмма</th></tr></thead>
 <tbody id="all-btns-body"></tbody>
 </table>
 </div>
@@ -365,10 +365,21 @@ function renderBtns(ec){
 
 function renderAllBtns(ec){
   const btnEvents = Object.entries(ec).filter(e => e[0].startsWith('BtnClick_')).sort((a,b)=>b[1]-a[1]);
+  const mx = btnEvents.length ? btnEvents[0][1] : 1;
   document.getElementById('all-btns-body').innerHTML = btnEvents.map(([n,c])=>{
     const btnText = n.replace('BtnClick_', '');
-    return `<tr><td><b style="color:var(--text)">${btnText}</b></td><td><span style="color:var(--cyan);font-weight:700;font-size:14px">${c}</span></td><td><span class="ev-badge ev-play">${n}</span></td></tr>`;
+    const p = Math.round(c/mx*100);
+    return `<tr>
+      <td><b style="color:var(--text)">${btnText}</b></td>
+      <td><span style="color:var(--cyan);font-weight:700;font-size:14px">${c}</span></td>
+      <td style="width:100%; min-width:150px">
+        <div class="btn-stat-bar-bg" style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+          <div class="btn-stat-fill" style="height:100%;background:var(--cyan);width:0%;transition:width 1s ease-out" data-w="${p}%"></div>
+        </div>
+      </td>
+    </tr>`;
   }).join('') || '<tr><td colspan="3" class="no-data">Пока нет кликов по кнопкам</td></tr>';
+  setTimeout(()=>document.querySelectorAll('#all-btns-body .btn-stat-fill').forEach(b=>b.style.width=b.dataset.w),50);
 }
 
 function renderCharts(){
