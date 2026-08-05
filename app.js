@@ -1421,14 +1421,25 @@ function initAnalyticsTracking() {
   }
 
   // Track Buy buttons
-  document.querySelectorAll('[onclick*="selectPlan"], [onclick*="TariffButton"]').forEach(function(btn) {
+  document.querySelectorAll('[onclick*="selectPlan"], [onclick*="TariffButton"], .pricing-section .btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       const text = btn.innerText || '';
-      const ev = text.includes('Basic') ? 'Buy_Basic_Click'
-        : text.includes('Pro') ? 'Buy_Pro_Click'
+      const ev = (text.includes('Базов') || text.includes('Basic')) ? 'Buy_Basic_Click'
+        : (text.includes('Платин') || text.includes('Platinum')) ? 'Buy_Pro_Click'
+        : (text.includes('бесплат') || text.includes('Free')) ? 'Buy_Free_Click'
         : 'Buy_Premium_Click';
       logClickAnalytics(ev, text.trim(), 0, { section: 'pricing', payment_intent: true });
     });
+  });
+
+  // Track ALL button clicks globally for the new Admin Panel Table
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('button, .btn, .btn-icon, nav a, .nav-custdev-btn');
+    if (btn) {
+      let btnText = (btn.innerText || btn.getAttribute('aria-label') || btn.title || btn.id || 'unnamed_btn').trim().replace(/[\r\n]+/g, ' ').substring(0, 45);
+      if(!btnText) btnText = 'icon_button';
+      logClickAnalytics('BtnClick_' + btnText, btnText, 0, { section: detectSection() });
+    }
   });
 }
 
