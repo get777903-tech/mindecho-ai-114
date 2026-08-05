@@ -883,12 +883,24 @@ function playMP3AudioTrack(forceStart = false) {
     initAudioPlayer();
   }
 
-  if (appState.isPlayingAudio && !forceStart) {
+  if (forceStart) {
+    appState.audioTrack.currentTime = 0;
+    appState.audioTrack.play().then(() => {
+      appState.isPlayingAudio = true;
+      document.getElementById('play-btn').innerText = "⏸";
+    }).catch(err => {
+      console.warn("MP3 playback fallback to speech synth:", err);
+      const text = document.getElementById('meditation-text-box').innerText;
+      speakTextTTS(text);
+    });
+    return;
+  }
+
+  if (appState.isPlayingAudio) {
     appState.audioTrack.pause();
     appState.isPlayingAudio = false;
     document.getElementById('play-btn').innerText = "▶";
   } else {
-    // Always resume from where it was paused
     appState.audioTrack.play().then(() => {
       appState.isPlayingAudio = true;
       document.getElementById('play-btn').innerText = "⏸";
@@ -1323,10 +1335,6 @@ function handleAuthSubmit(e) {
 // Google Sheets Webhook Click & Onboarding Logger
 // ─── Core Analytics Logger (v2 — 16 fields) ────────────────────────────────
 function logClickAnalytics(eventType, planName, priceAmount, extraData = {}) {
-  const storedEmail = localStorage.getItem('userEmail');
-  if (storedEmail === 'get777903@gmail.com' || extraData.email === 'get777903@gmail.com') {
-    return; // Ignore activity from admin account
-  }
   const timeOnPage = Math.round((Date.now() - analyticsState.pageStartTime) / 1000);
   const referrer = document.referrer
     ? (document.referrer.includes('instagram') ? 'Instagram'
