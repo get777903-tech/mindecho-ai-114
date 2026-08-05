@@ -227,6 +227,21 @@ async function loadData(){
       allRows=j.rows||[];
       allRows.sort((a,b) => parseDateStr(b.timestamp) - parseDateStr(a.timestamp));
       stats=j.stats||{}; 
+      
+      const realReviews = allRows.filter(r => r.event_type === 'CustDev_Submitted').map(r => ({
+        timestamp: r.timestamp,
+        name: r.user_name && r.user_name !== '-' ? r.user_name : 'Аноним',
+        contact: (r.email && r.email !== '-') ? r.email : ((r.phone && r.phone !== '-') ? r.phone : 'Не указан'),
+        scenario: r.plan_name,
+        scenarioTitle: r.plan_name === 'burnout' ? '🟢 Выгорание' : r.plan_name === 'tantrums' ? '🔵 Истерики' : r.plan_name === 'confidence' ? '🟡 Уверенность' : '🟣 Эксперт',
+        answers: r.page_section || '-',
+        status: '⏳ В обработке'
+      }));
+      
+      if(realReviews.length > 0) {
+        reviewsData = realReviews;
+      }
+      
       renderAll();
     }
     else loadDemo();
