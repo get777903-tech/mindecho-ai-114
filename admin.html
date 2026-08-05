@@ -107,7 +107,17 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 
 <div class="two-col">
 <div class="panel"><div class="panel-title"><span>🔽</span>Воронка продаж</div><div id="funnel-wrap"><div class="no-data">Загрузка...</div></div></div>
-<div class="panel"><div class="panel-title"><span>🖱</span>Статистика по кнопкам</div><div id="btn-wrap"><div class="no-data">Загрузка...</div></div></div>
+<div class="panel"><div class="panel-title"><span>🎯</span>Ключевые события</div><div id="btn-wrap"><div class="no-data">Загрузка...</div></div></div>
+</div>
+
+<div class="panel" style="margin-bottom:24px">
+<div class="panel-title"><span>🖱</span>Таблица: Абсолютно ВСЕ клики на сайте (по кнопкам)</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Надпись на кнопке (Текст)</th><th>Количество кликов</th><th>Системное Событие</th></tr></thead>
+<tbody id="all-btns-body"></tbody>
+</table>
+</div>
 </div>
 
 <div class="two-col">
@@ -219,7 +229,7 @@ async function loadData(){
 let reviewsData = [];
 
 function loadDemo(){
-  const evs=['Page_View','Generate_Click','Play_Click','Pricing_Viewed','Buy_Premium_Click','Buy_Basic_Click','Voice_Recorded','NDA_Signed','Engaged_30s','Engaged_60s','Auth_Modal_Opened','Emergency_Click'];
+  const evs=['Page_View','Generate_Click','Play_Click','Pricing_Viewed','Buy_Premium_Click','Buy_Basic_Click','Voice_Recorded','NDA_Signed','Engaged_30s','Engaged_60s','Auth_Modal_Opened','Emergency_Click', 'BtnClick_Включить Рассказ-медитацию', 'BtnClick_Выбрать Базовый', 'BtnClick_▶', 'BtnClick_Начать бесплатно'];
   const names=['Мария','Анна','Елена','Ольга','Александр','Надежда'];
   const emails=['user@gmail.com','anna@mail.ru','mama@yandex.ru','olga@icloud.com','elena@mail.ru'];
   const phones=['+7-999-123-45-67','+7-912-456-78-90'];
@@ -318,6 +328,7 @@ function renderAll(){
   renderNames(s.child_names||{});
   renderReviewsTable();
   renderTable();
+  renderAllBtns(ec);
 }
 
 function renderFunnel(f,pv){
@@ -350,6 +361,14 @@ function renderBtns(ec){
     return '<div class="btn-stat-row"><div class="btn-stat-name">'+(lm[n]||n)+'</div><div class="btn-stat-bar-bg"><div class="btn-stat-fill" style="width:0%;background:'+gc(n)+'" data-w="'+p+'%"></div></div><div class="btn-stat-count">'+c+'</div></div>';
   }).join('')||'<div class="no-data">Нет данных</div>';
   setTimeout(()=>document.querySelectorAll('.btn-stat-fill').forEach(b=>b.style.width=b.dataset.w),50);
+}
+
+function renderAllBtns(ec){
+  const btnEvents = Object.entries(ec).filter(e => e[0].startsWith('BtnClick_')).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('all-btns-body').innerHTML = btnEvents.map(([n,c])=>{
+    const btnText = n.replace('BtnClick_', '');
+    return `<tr><td><b style="color:var(--text)">${btnText}</b></td><td><span style="color:var(--cyan);font-weight:700;font-size:14px">${c}</span></td><td><span class="ev-badge ev-play">${n}</span></td></tr>`;
+  }).join('') || '<tr><td colspan="3" class="no-data">Пока нет кликов по кнопкам</td></tr>';
 }
 
 function renderCharts(){
