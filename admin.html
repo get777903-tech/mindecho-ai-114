@@ -175,9 +175,16 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 <button class="export-btn" onclick="exportCSV()">⬇ Экспорт CSV</button>
 <span id="tbl-count" style="color:var(--muted);font-size:12px;margin-left:auto"></span>
 </div>
+<style>
+.exp-btn { background: rgba(249,115,22,0.15); border: 1px solid var(--orange); color: var(--orange); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; transition: 0.2s; }
+.exp-btn:hover { background: var(--orange); color: #fff; }
+.details-row { display: none; background: rgba(0,0,0,0.2); }
+.details-table { width: 100%; border-left: 2px solid var(--orange); margin: 8px 0; background: rgba(255,255,255,0.02); }
+.details-table th, .details-table td { padding: 6px 12px; font-size: 11px; }
+</style>
 <div class="table-wrap">
 <table>
-<thead><tr><th>Время</th><th>Email</th><th>WhatsApp/TG</th><th>Имя</th><th>Событие</th><th>Раздел</th><th>Скролл%</th><th>Время с</th><th>Устройство</th><th>Источник</th><th>Тариф</th></tr></thead>
+<thead><tr><th>ID Сессии / Пользователь</th><th>Email / Phone</th><th>Имя</th><th>Кол-во Кликов</th><th>Устройство</th><th>Источник</th><th>Действие</th></tr></thead>
 <tbody id="tbl-body"></tbody>
 </table>
 </div>
@@ -238,26 +245,41 @@ function loadDemo(){
   const secs=['hero','pricing','generator','mission'];
   const kids=['Sofia','Masha','Sasha','Dasha','Vanya','Alisa'];
   allRows=[];
-  for(let i=0;i<90;i++){
-    const ev=evs[Math.floor(Math.random()*evs.length)];
+  const numSessions = 250;
+  for(let i=0;i<numSessions;i++){
+    const sId = 's_'+Math.random().toString(36).substr(2,6);
+    const tsBase = Date.now()-Math.random()*86400000*7;
     const he=Math.random()>0.55, hp=Math.random()>0.78;
+    const uName = he?names[Math.floor(Math.random()*names.length)]:'-';
+    const uEmail = he?emails[Math.floor(Math.random()*emails.length)]:'-';
+    const uPhone = hp?phones[Math.floor(Math.random()*phones.length)]:'-';
+    const dev = devs[Math.floor(Math.random()*devs.length)];
+    const ref = refs[Math.floor(Math.random()*refs.length)];
+    
+    // Every session starts with a Page_View
     allRows.push({
-      timestamp:new Date(Date.now()-Math.random()*86400000*7).toLocaleString('ru-RU'),
-      event_type:ev,session_id:'s_'+Math.random().toString(36).substr(2,6),
-      user_name:he?names[Math.floor(Math.random()*names.length)]:'-',
-      email:he?emails[Math.floor(Math.random()*emails.length)]:'-',
-      phone:hp?phones[Math.floor(Math.random()*phones.length)]:'-',
-      plan_name:ev.includes('Buy')?ev.includes('Basic')?'Basic':ev.includes('Pro')?'Pro':'Premium':'-',
-      price:ev.includes('Buy')?ev.includes('Basic')?9.99:ev.includes('Pro')?29.99:14.99:0,
-      language:Math.random()>0.2?'ru':'he',
-      device_type:devs[Math.floor(Math.random()*devs.length)],
-      referrer:refs[Math.floor(Math.random()*refs.length)],
-      page_section:secs[Math.floor(Math.random()*secs.length)],
-      scroll_depth:Math.round(Math.random()*100),
-      time_on_page:Math.round(Math.random()*280),
-      child_name:(ev==='Generate_Click'||ev==='Play_Click')?kids[Math.floor(Math.random()*kids.length)]:'-',
-      payment_intent:ev.includes('Buy')
+      timestamp:new Date(tsBase).toLocaleString('ru-RU'),
+      event_type:'Page_View',session_id:sId, user_name:uName, email:uEmail, phone:uPhone,
+      plan_name:'-', price:0, language:Math.random()>0.2?'ru':'he',
+      device_type:dev, referrer:ref, page_section:'hero', scroll_depth:0, time_on_page:0, child_name:'-', payment_intent:false
     });
+
+    // Random additional events for this session
+    const numEvents = Math.floor(Math.random()*5);
+    for(let j=0; j<numEvents; j++){
+      const ev=evs[Math.floor(Math.random()*evs.length)];
+      if(ev==='Page_View') continue;
+      allRows.push({
+        timestamp:new Date(tsBase + (j+1)*30000).toLocaleString('ru-RU'),
+        event_type:ev, session_id:sId, user_name:uName, email:uEmail, phone:uPhone,
+        plan_name:ev.includes('Buy')?ev.includes('Basic')?'Basic':ev.includes('Pro')?'Pro':'Premium':'-',
+        price:ev.includes('Buy')?ev.includes('Basic')?9.99:ev.includes('Pro')?29.99:14.99:0,
+        language:'ru', device_type:dev, referrer:ref, page_section:secs[Math.floor(Math.random()*secs.length)],
+        scroll_depth:Math.round(Math.random()*100), time_on_page:Math.round(Math.random()*280),
+        child_name:(ev==='Generate_Click'||ev==='Play_Click')?kids[Math.floor(Math.random()*kids.length)]:'-',
+        payment_intent:ev.includes('Buy')
+      });
+    }
   }
   reviewsData = [
     { timestamp: '01.08.2026, 15:42', name: 'Анна М.', contact: '+7 (912) 456-78-90 (WA)', scenario: 'burnout', scenarioTitle: '🟢 Выгорание', answers: '1) Усталость вечером: 9/10. 2) Мечтаю о медитации голосом мамы. 3) Приложение очень нужно для мамы!', status: '🎁 Подарок выдан' },
@@ -441,23 +463,57 @@ function renderTable(){
   if(lf==='email')rows=rows.filter(r=>r.email&&r.email!=='-');
   else if(lf==='phone')rows=rows.filter(r=>r.phone&&r.phone!=='-');
   else if(lf==='leads')rows=rows.filter(r=>(r.email&&r.email!=='-')||(r.phone&&r.phone!=='-'));
-  document.getElementById('tbl-count').textContent='Показано: '+rows.length+' из '+allRows.length;
+  // Group rows by session_id
+  const sessions = {};
+  rows.forEach(r => {
+    const s = r.session_id || 'unknown';
+    if(!sessions[s]) sessions[s] = [];
+    sessions[s].push(r);
+  });
+  const sortedSessions = Object.values(sessions).sort((a,b)=>parseDateStr(b[0].timestamp) - parseDateStr(a[0].timestamp));
+  document.getElementById('tbl-count').textContent='Показано: '+sortedSessions.length+' уникальных сессий';
+  
   const cm={'Buy':'ev-buy','Play':'ev-play','Page_View':'ev-view','Engaged':'ev-engage','NDA':'ev-nda'};
   function ec(n){for(const[k,v]of Object.entries(cm))if(n&&n.includes(k))return v;return 'ev-def';}
-  document.getElementById('tbl-body').innerHTML=rows.slice(0,200).map(r=>`
-<tr>
-<td style="color:var(--muted)">${String(r.timestamp||'').split(',')[0]}</td>
-<td>${r.email&&r.email!=='-'?'<span style="color:var(--cyan)">'+r.email+'</span>':'-'}</td>
-<td>${r.phone&&r.phone!=='-'?'<span style="color:var(--green)">'+r.phone+'</span>':'-'}</td>
-<td>${r.user_name&&r.user_name!=='-'?r.user_name:'-'}</td>
-<td><span class="ev-badge ${ec(r.event_type)}">${r.event_type||'-'}</span></td>
-<td style="color:var(--muted)">${r.page_section||'-'}</td>
-<td>${r.scroll_depth>0?'<span style="color:var(--orange)">'+r.scroll_depth+'%</span>':'-'}</td>
-<td>${r.time_on_page>0?r.time_on_page+'с':'-'}</td>
-<td>${r.device_type||'-'}</td>
-<td style="color:var(--muted)">${r.referrer||'-'}</td>
-<td>${r.plan_name&&r.plan_name!=='-'?'<span style="color:var(--yellow)">'+r.plan_name+'</span>':'-'}</td>
-</tr>`).join('')||'<tr><td colspan="11" class="no-data">Нет данных</td></tr>';
+  
+  document.getElementById('tbl-body').innerHTML=sortedSessions.slice(0, 100).map((sessRows, idx)=>{
+    const r = sessRows[0]; // First event in session for general info
+    const evCount = sessRows.length;
+    // Look for email/phone across the session
+    const em = sessRows.find(x => x.email && x.email !== '-')?.email || '-';
+    const ph = sessRows.find(x => x.phone && x.phone !== '-')?.phone || '-';
+    const nm = sessRows.find(x => x.user_name && x.user_name !== '-')?.user_name || '-';
+    
+    let detailsHtml = `<table class="details-table">
+      <thead><tr><th>Время</th><th>Событие</th><th>Текст / Раздел</th><th>Скролл%</th><th>Время с</th></tr></thead>
+      <tbody>` + sessRows.map(ev => `
+        <tr>
+          <td style="color:var(--muted)">${String(ev.timestamp||'').split(',')[0]}</td>
+          <td><span class="ev-badge ${ec(ev.event_type)}">${ev.event_type||'-'}</span></td>
+          <td>${ev.page_section || ev.plan_name || '-'}</td>
+          <td>${ev.scroll_depth>0?'<span style="color:var(--orange)">'+ev.scroll_depth+'%</span>':'-'}</td>
+          <td>${ev.time_on_page>0?ev.time_on_page+'с':'-'}</td>
+        </tr>
+      `).join('') + `</tbody></table>`;
+
+    return `
+    <tr>
+      <td><span style="color:var(--muted)">${r.session_id||'-'}</span></td>
+      <td>
+        ${em!=='-'?'<span style="color:var(--cyan);display:block;margin-bottom:2px">'+em+'</span>':''}
+        ${ph!=='-'?'<span style="color:var(--green)">'+ph+'</span>':''}
+        ${em==='-'&&ph==='-'?'-':''}
+      </td>
+      <td>${nm}</td>
+      <td><b>${evCount}</b> событий</td>
+      <td>${r.device_type||'-'}</td>
+      <td style="color:var(--muted)">${r.referrer||'-'}</td>
+      <td><button class="exp-btn" onclick="const r=document.getElementById('details-${idx}'); r.style.display=r.style.display==='table-row'?'none':'table-row';">Показать клики 🔽</button></td>
+    </tr>
+    <tr class="details-row" id="details-${idx}">
+      <td colspan="7">${detailsHtml}</td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" class="no-data">Нет данных</td></tr>';
 }
 
 function copyEmails(){const l=(stats.email_list||[]).join('\n');navigator.clipboard.writeText(l).then(()=>showToast('Скопировано '+(stats.email_list||[]).length+' email'));}
