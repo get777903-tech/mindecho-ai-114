@@ -199,8 +199,13 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co';
 const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
 let supabase = null;
-if (typeof window.supabase !== 'undefined') {
-  supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+try {
+  if (typeof window.supabase !== 'undefined') {
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  }
+} catch (err) {
+  alert("Критическая ошибка инициализации базы: " + err.message);
+  console.error("Init error", err);
 }
 
 const PASS = 'Mind2026';
