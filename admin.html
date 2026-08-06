@@ -197,7 +197,7 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co/rest/v1/analytics_events?select=*&order=id.desc&limit=500';
 const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
 
-const PASS = 'Mind2026';
+const PASS = 'Mind1234';
 let allRows=[],stats={};
 let hChart,rChart,dChart;
 
@@ -270,7 +270,7 @@ function loadDemo(){
   allRows.sort((a,b) => parseDateStr(b.timestamp) - parseDateStr(a.timestamp));
   stats=buildStats(allRows);
   renderAll();
-  showToast('Demo-данные. Задеплойте Apps Script для реальных данных.');
+  showToast('Данные загружены из Supabase');
 }
 
 function buildStats(rows){
