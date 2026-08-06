@@ -261,7 +261,9 @@ async function loadData(){
     
     loadDemo(); // Builds stats and renders (demo data has been removed from loadDemo)
   }catch(e){
-    console.error("Firebase load error:", e);
+    alert("Критическая ошибка загрузки: " + e.message);
+    console.error("Supabase load error:", e);
+    document.getElementById('loading-overlay').style.display='none';
     loadDemo();
   }
 }
