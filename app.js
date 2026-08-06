@@ -3,8 +3,25 @@
    Admin Analytics Dashboard + Full Click Tracking + Scroll/Time Metrics
    ========================================================================== */
 
-// Webhook URL for Google Sheets logging
-const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx_DEMO_MINDECHO_WEBHOOK/exec";
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBedgxqbS_OY15MH2Fk3XZ2GCe95kUfP-w",
+  authDomain: "mindecho-ai-db.firebaseapp.com",
+  projectId: "mindecho-ai-db",
+  storageBucket: "mindecho-ai-db.firebasestorage.app",
+  messagingSenderId: "209923903712",
+  appId: "1:209923903712:web:77b5fe325b8743d984c085",
+  measurementId: "G-W2M51QG81P"
+};
+
+// Initialize Firebase if it exists
+let db = null;
+if (typeof firebase !== 'undefined') {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  db = firebase.firestore();
+}
 
 // Audio Track File Name
 const MEDITATION_AUDIO_SRC = "meditation1.mp3";
@@ -1367,15 +1384,16 @@ function logClickAnalytics(eventType, planName, priceAmount, extraData = {}) {
     user_agent:     ua
   };
 
-  console.log('📊 [MindEcho Analytics 111]', eventType, payload);
+  console.log('📊 [MindEcho Firebase Analytics]', eventType, payload);
 
   try {
-    fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(err => console.warn('Google Sheets Webhook notice:', err));
+    if (db) {
+      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      db.collection("analytics_events").add(payload)
+        .catch(err => console.error('🔥 Firebase log error:', err));
+    } else {
+      console.warn("Firebase not initialized!");
+    }
   } catch (err) {
     console.warn('Analytics fetch error:', err);
   }
