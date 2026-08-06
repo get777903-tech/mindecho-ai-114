@@ -4,12 +4,8 @@
    ========================================================================== */
 
 // Supabase Configuration
-const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co';
+const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co/rest/v1/analytics_events';
 const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
-let db = null;
-if (typeof supabase !== 'undefined') {
-  db = supabase.createClient(supabaseUrl, supabaseKey);
-}
 
 // Audio Track File Name
 const MEDITATION_AUDIO_SRC = "meditation1.mp3";
@@ -1375,13 +1371,20 @@ function logClickAnalytics(eventType, planName, priceAmount, extraData = {}) {
   console.log('📊 [MindEcho Supabase Analytics]', eventType, payload);
 
   try {
-    if (db) {
-      db.from('analytics_events').insert([payload]).then(({ error }) => {
-        if (error) console.error('🔥 Supabase log error:', error);
-      });
-    } else {
-      console.warn("Supabase not initialized!");
-    }
+    fetch(supabaseUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': 'Bearer ' + supabaseKey,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      if(!res.ok) console.error('🔥 Supabase HTTP error:', res.status);
+    }).catch(err => {
+      console.error('🔥 Supabase network error:', err);
+    });
   } catch (err) {
     console.warn('Analytics fetch error:', err);
   }
