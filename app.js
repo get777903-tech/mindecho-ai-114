@@ -3,24 +3,12 @@
    Admin Analytics Dashboard + Full Click Tracking + Scroll/Time Metrics
    ========================================================================== */
 
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBedgxqbS_OY15MH2Fk3XZ2GCe95kUfP-w",
-  authDomain: "mindecho-ai-db.firebaseapp.com",
-  projectId: "mindecho-ai-db",
-  storageBucket: "mindecho-ai-db.firebasestorage.app",
-  messagingSenderId: "209923903712",
-  appId: "1:209923903712:web:77b5fe325b8743d984c085",
-  measurementId: "G-W2M51QG81P"
-};
-
-// Initialize Firebase if it exists
+// Supabase Configuration
+const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co';
+const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
 let db = null;
-if (typeof firebase !== 'undefined') {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  db = firebase.firestore();
+if (typeof supabase !== 'undefined') {
+  db = supabase.createClient(supabaseUrl, supabaseKey);
 }
 
 // Audio Track File Name
@@ -1384,15 +1372,15 @@ function logClickAnalytics(eventType, planName, priceAmount, extraData = {}) {
     user_agent:     ua
   };
 
-  console.log('📊 [MindEcho Firebase Analytics]', eventType, payload);
+  console.log('📊 [MindEcho Supabase Analytics]', eventType, payload);
 
   try {
     if (db) {
-      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      db.collection("analytics_events").add(payload)
-        .catch(err => console.error('🔥 Firebase log error:', err));
+      db.from('analytics_events').insert([payload]).then(({ error }) => {
+        if (error) console.error('🔥 Supabase log error:', error);
+      });
     } else {
-      console.warn("Firebase not initialized!");
+      console.warn("Supabase not initialized!");
     }
   } catch (err) {
     console.warn('Analytics fetch error:', err);
