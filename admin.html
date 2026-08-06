@@ -6,8 +6,6 @@
 <title>MindEcho AI — Панель Модератора</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0F172A;--bg2:#1E293B;--orange:#F97316;--cyan:#06B6D4;--green:#22C55E;--red:#EF4444;--purple:#A855F7;--yellow:#EAB308;--text:#F1F5F9;--muted:#94A3B8;--border:rgba(255,255,255,0.08)}
@@ -196,17 +194,8 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 <div class="toast" id="toast"></div>
 <script>
 // Supabase Configuration
-const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co';
+const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co/rest/v1/analytics_events?select=*&order=id.desc&limit=500';
 const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
-let supabase = null;
-try {
-  if (typeof window.supabase !== 'undefined') {
-    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  }
-} catch (err) {
-  alert("Критическая ошибка инициализации базы: " + err.message);
-  console.error("Init error", err);
-}
 
 const PASS = 'Mind2026';
 let allRows=[],stats={};
@@ -235,16 +224,18 @@ function parseDateStr(str) {
 
 async function loadData(){
   try{
-    if(!supabase) throw new Error("Supabase is not initialized");
+    const response = await fetch(supabaseUrl, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': 'Bearer ' + supabaseKey
+      }
+    });
     
-    const { data, error } = await supabase
-      .from("analytics_events")
-      .select("*")
-      .order("id", { ascending: false })
-      .limit(500);
-      
-    if (error) throw error;
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
+    }
     
+    const data = await response.json();
     allRows = data || [];
     
     allRows.sort((a,b) => parseDateStr(b.timestamp) - parseDateStr(a.timestamp));
