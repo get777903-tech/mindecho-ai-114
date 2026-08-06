@@ -6,6 +6,9 @@
 <title>MindEcho AI — Панель Модератора</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0F172A;--bg2:#1E293B;--orange:#F97316;--cyan:#06B6D4;--green:#22C55E;--red:#EF4444;--purple:#A855F7;--yellow:#EAB308;--text:#F1F5F9;--muted:#94A3B8;--border:rgba(255,255,255,0.08)}
@@ -193,8 +196,26 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const PASS="Mind2026";
-const READ_URL="https://script.google.com/macros/s/AKfycbx_DEMO_MINDECHO_WEBHOOK/exec?key=mindecho_read_key_2026";
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBedgxqbS_OY15MH2Fk3XZ2GCe95kUfP-w",
+  authDomain: "mindecho-ai-db.firebaseapp.com",
+  projectId: "mindecho-ai-db",
+  storageBucket: "mindecho-ai-db.firebasestorage.app",
+  messagingSenderId: "209923903712",
+  appId: "1:209923903712:web:77b5fe325b8743d984c085",
+  measurementId: "G-W2M51QG81P"
+};
+
+let db = null;
+if (typeof firebase !== 'undefined') {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  db = firebase.firestore();
+}
+
+const PASS = '1234';
 let allRows=[],stats={};
 let hChart,rChart,dChart;
 
@@ -221,31 +242,36 @@ function parseDateStr(str) {
 
 async function loadData(){
   try{
-    const r=await fetch(READ_URL);
-    const j=await r.json();
-    if(j.status==='success'){
-      allRows=j.rows||[];
-      allRows.sort((a,b) => parseDateStr(b.timestamp) - parseDateStr(a.timestamp));
-      stats=j.stats||{}; 
-      
-      const realReviews = allRows.filter(r => r.event_type === 'CustDev_Submitted').map(r => ({
-        timestamp: r.timestamp,
-        name: r.user_name && r.user_name !== '-' ? r.user_name : 'Аноним',
-        contact: (r.email && r.email !== '-') ? r.email : ((r.phone && r.phone !== '-') ? r.phone : 'Не указан'),
-        scenario: r.plan_name,
-        scenarioTitle: r.plan_name === 'burnout' ? '🟢 Выгорание' : r.plan_name === 'tantrums' ? '🔵 Истерики' : r.plan_name === 'confidence' ? '🟡 Уверенность' : '🟣 Эксперт',
-        answers: r.page_section || '-',
-        status: '⏳ В обработке'
-      }));
-      
-      if(realReviews.length > 0) {
-        reviewsData = realReviews;
-      }
-      
-      renderAll();
+    if(!db) throw new Error("Firebase is not initialized");
+    const snapshot = await db.collection("analytics_events").orderBy("createdAt", "desc").limit(500).get();
+    
+    allRows = [];
+    snapshot.forEach(doc => {
+      allRows.push(doc.data());
+    });
+    
+    allRows.sort((a,b) => parseDateStr(b.timestamp) - parseDateStr(a.timestamp));
+    
+    // Process reviews
+    const realReviews = allRows.filter(r => r.event_type === 'CustDev_Submitted').map(r => ({
+      timestamp: r.timestamp,
+      name: r.user_name && r.user_name !== '-' ? r.user_name : 'Аноним',
+      contact: (r.email && r.email !== '-') ? r.email : ((r.phone && r.phone !== '-') ? r.phone : 'Не указан'),
+      scenario: r.plan_name,
+      scenarioTitle: r.plan_name === 'burnout' ? '🟢 Выгорание' : r.plan_name === 'tantrums' ? '🔵 Истерики' : r.plan_name === 'confidence' ? '🟡 Уверенность' : '🟣 Эксперт',
+      answers: r.page_section || '-',
+      status: '⏳ В обработке'
+    }));
+    
+    if(realReviews.length > 0) {
+      reviewsData = realReviews;
     }
-    else loadDemo();
-  }catch(e){loadDemo();}
+    
+    loadDemo(); // Builds stats and renders (demo data has been removed from loadDemo)
+  }catch(e){
+    console.error("Firebase load error:", e);
+    loadDemo();
+  }
 }
 
 let reviewsData = [];
