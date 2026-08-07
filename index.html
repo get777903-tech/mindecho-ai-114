@@ -591,6 +591,11 @@
         </div>
 
         <div class="form-group">
+          <label data-i18n="label_auth_phone">WhatsApp / Telegram (Обязательно):</label>
+          <input type="tel" id="checkout-phone" required placeholder="WhatsApp / Telegram (+7...)" class="form-input">
+        </div>
+
+        <div class="form-group">
           <label data-i18n="label_card_num">Номер банковской карты:</label>
           <input type="text" required placeholder="4276 •••• •••• 8899" class="form-input" maxlength="19">
         </div>
@@ -641,12 +646,12 @@
 
       <div class="form-group">
         <label for="nda-user-name" data-i18n="label_nda_name">Ваше ФИО Подписанта:</label>
-        <input type="text" id="nda-user-name" placeholder="Иванов Александр Петрович" class="form-input">
+        <input type="text" id="nda-user-name" required placeholder="Иванов Александр Петрович" class="form-input">
       </div>
       
       <div class="form-group">
-        <label>WhatsApp / Telegram:</label>
-        <input type="text" id="nda-user-contact" placeholder="+7 999 000 00 00" class="form-input">
+        <label data-i18n="label_auth_phone">WhatsApp / Telegram (Обязательно):</label>
+        <input type="tel" id="nda-user-contact" required placeholder="WhatsApp / Telegram (+7...)" class="form-input">
       </div>
 
       <div class="form-group">
@@ -688,7 +693,8 @@
           <!-- Dynamic CustDev questions injected via JS -->
         </div>
         <div style="margin-top:15px; margin-bottom:15px">
-            <input type="text" id="cd-input-contact" placeholder="Ваш Email, WhatsApp или Telegram (для получения подарка)" class="form-input" style="width:100%; border:1px solid rgba(255,255,255,0.2)" required>
+            <label style="display:block; margin-bottom:6px; font-weight:600;" data-i18n="label_custdev_phone">WhatsApp / Telegram (Обязательно для получения подарка):</label>
+            <input type="text" id="cd-input-contact" placeholder="Ваш WhatsApp или Telegram (+7...)" class="form-input" style="width:100%; border:1px solid rgba(255,255,255,0.2)" required>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block btn-orange" data-i18n="btn_submit_custdev">
