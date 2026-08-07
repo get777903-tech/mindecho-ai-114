@@ -93,10 +93,10 @@
 
           <!-- Перемещенные 2 кнопки на одной строчке ВМЕСТО "Поддержать проект / получить ссылку" -->
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 160px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;">
+            <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 160px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_games">
               🎮 Игры развивающие речь + эмоциональный интеллект
             </a>
-            <button class="btn btn-primary btn-md" onclick="scrollToSection('generator')" style="flex: 1; min-width: 160px; justify-content: center; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;">
+            <button class="btn btn-primary btn-md" onclick="scrollToSection('generator')" style="flex: 1; min-width: 160px; justify-content: center; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_prayer">
               🙏 Создание молитвы-медитации
             </button>
           </div>
@@ -537,10 +537,10 @@
 
       <div class="social-auth">
         <button class="btn btn-social" onclick="simulateSocialAuth('Google')">
-          <span class="social-icon">🔴</span> <span data-i18n="btn_auth_google">Вход через Google Account</span>
+          <span class="social-icon">🔴</span> <span data-i18n="btn_auth_google">Вход через аккаунт Google</span>
         </button>
         <button class="btn btn-social" onclick="simulateSocialAuth('Apple')">
-          <span class="social-icon">🍏</span> <span data-i18n="btn_auth_apple">Вход через Apple Store ID</span>
+          <span class="social-icon">🍏</span> <span data-i18n="btn_auth_apple">Вход через Apple ID</span>
         </button>
       </div>
 
@@ -563,7 +563,7 @@
         </div>
 
         <div class="form-group">
-          <label for="auth-address" data-i18n="label_auth_address">email address</label>
+          <label for="auth-address" data-i18n="label_auth_address">Город / Страна проживания:</label>
           <input type="text" id="auth-address" placeholder="Москва / Тель-Авив / Нью-Йорк" class="form-input">
         </div>
 
@@ -650,7 +650,7 @@
       </div>
 
       <div class="form-group">
-        <label>e-mail address:</label>
+        <label data-i18n="label_nda_email">Ваш E-mail адрес:</label>
         <input type="email" id="nda-user-email" placeholder="email@example.com" class="form-input">
       </div>
 
