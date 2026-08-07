@@ -1337,6 +1337,18 @@ function closeAuthModal() {
   document.getElementById('auth-modal').classList.add('hidden');
 }
 
+// Games Modal Handlers
+function openGamesModal() {
+  const modal = document.getElementById('games-modal');
+  if (modal) modal.classList.remove('hidden');
+  logClickAnalytics('GamesModal_Opened', 'Games', 0);
+}
+
+function closeGamesModal() {
+  const modal = document.getElementById('games-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
 function simulateSocialAuth(provider) {
   const userId = 'USER-' + Math.floor(100000 + Math.random() * 900000);
   const sampleName = provider === 'Google' ? 'Google User' : 'Apple User';
