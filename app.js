@@ -1291,22 +1291,21 @@ function toggleBillingCycle() {
 // Plan Selection & Checkout Modal
 function selectPlan(planName, price) {
   appState.selectedPlan = planName;
-  appState.selectedPrice = price;
-
-  logClickAnalytics('TariffButton_Click', planName, price);
-
-  if (!localStorage.getItem('ndaSigned')) {
-    appState.pendingCheckout = true;
-    openNDAModal();
-  } else {
-    if (price === 0) {
-      openAuthModal('free');
-    } else {
-      document.getElementById('checkout-plan-name').innerText = planName;
-      document.getElementById('checkout-plan-price').innerText = `$${price}`;
-      document.getElementById('checkout-modal').classList.remove('hidden');
-    }
+  
+  // Dynamic annual price calculation
+  let finalPrice = price;
+  if (appState.isAnnualBilling && price > 0) {
+    if (planName === 'Basic') finalPrice = 29.99;
+    else if (planName === 'Premium') finalPrice = 59.99;
+    else if (planName === 'Platinum') finalPrice = 99.99;
   }
+  appState.selectedPrice = finalPrice;
+
+  logClickAnalytics('TariffButton_Click', planName, finalPrice);
+
+  // ALWAYS open DISCLAIMER first!
+  appState.pendingCheckout = true;
+  openNDAModal();
 }
 
 function closeCheckoutModal() {
