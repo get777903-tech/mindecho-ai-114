@@ -153,7 +153,8 @@ const i18n = {
     divider_or: "или по Email и Телефону",
     label_auth_name: "Ваше Имя и Фамилия:",
     label_auth_email: "Ваш Email:",
-    label_auth_phone: "Номер телефона:",
+    label_auth_phone: "WhatsApp / Telegram (Обязательно):",
+    label_custdev_phone: "WhatsApp / Telegram (Обязательно для получения подарка):",
     label_auth_address: "Город / Страна проживания:",
     label_nda_email: "Ваш E-mail адрес:",
     label_terms_agree: "Я согласен с Условиями использования и политикой конфиденциальности.",
@@ -311,7 +312,8 @@ const i18n = {
     divider_or: "or via Email and Phone",
     label_auth_name: "Full Name:",
     label_auth_email: "Email Address:",
-    label_auth_phone: "Phone Number:",
+    label_auth_phone: "WhatsApp / Telegram (Required):",
+    label_custdev_phone: "WhatsApp / Telegram (Required for gift):",
     label_auth_address: "City / Residence Address:",
     label_nda_email: "Your E-mail Address:",
     label_terms_agree: "I agree with Terms of Use and Privacy Policy.",
@@ -469,7 +471,8 @@ const i18n = {
     divider_or: "או באמצעות אימייל וטלפון",
     label_auth_name: "שם מלא:",
     label_auth_email: "כתובת אימייל:",
-    label_auth_phone: "מספר טלפון:",
+    label_auth_phone: "WhatsApp / Telegram (חובה):",
+    label_custdev_phone: "WhatsApp / Telegram (חובה לקבלת המתנה):",
     label_auth_address: "עיר / מדינת מגורים:",
     label_nda_email: "כתובת אימייל:",
     label_terms_agree: "אני מסכים לתנאי השימוש ומדיניות הפרטיות.",
@@ -1077,9 +1080,15 @@ function closeNDAModal() {
 
 async function submitNDASignature() {
   const name = document.getElementById('nda-user-name').value || 'Анонимный Подписант';
-  const contact = document.getElementById('nda-user-contact') ? document.getElementById('nda-user-contact').value : '';
-  const email = document.getElementById('nda-user-email') ? document.getElementById('nda-user-email').value : '';
+  const contact = document.getElementById('nda-user-contact') ? document.getElementById('nda-user-contact').value.trim() : '';
+  const email = document.getElementById('nda-user-email') ? document.getElementById('nda-user-email').value.trim() : '';
   const sigData = appState.signatureCanvas ? appState.signatureCanvas.toDataURL() : '';
+
+  if (!contact) {
+    alert("⚠️ Пожалуйста, укажите ваш номер WhatsApp или Telegram для продолжения!");
+    document.getElementById('nda-user-contact')?.focus();
+    return;
+  }
 
   localStorage.setItem('ndaSigned', 'true');
   if (typeof hasSignedNDA !== 'undefined') {
@@ -1287,9 +1296,10 @@ function closeCheckoutModal() {
 
 function handlePaymentSubmit(e) {
   e.preventDefault();
+  const phone = document.getElementById('checkout-phone')?.value || 'Не указан';
   alert(`🎉 Подписка "${appState.selectedPlan}" успешно активирована! Добро пожаловать в экосистему MindEcho AI.`);
   closeCheckoutModal();
-  logClickAnalytics('Payment_Completed', appState.selectedPlan, appState.selectedPrice);
+  logClickAnalytics('Payment_Completed', appState.selectedPlan, appState.selectedPrice, { phone: phone });
 }
 
 // Auth Modal Handlers
