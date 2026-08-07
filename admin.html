@@ -355,7 +355,7 @@ function renderBtns(ec){
   const sorted=Object.entries(ec).sort((a,b)=>b[1]-a[1]).slice(0,14);
   const mx=sorted.length?sorted[0][1]:1;
   const cm={'Buy':'#22C55E','Play':'#06B6D4','Page_View':'#F97316','Pricing':'#EAB308','NDA':'#A855F7','Voice':'#F43F5E','Generate':'#3B82F6','Engaged':'#8B5CF6','Emergency':'#EF4444'};
-  const lm={'Page_View':'👁 Заход на сайт','Generate_Click':'✨ Генерация медитации','Play_Click':'▶ Воспроизведение','Pricing_Viewed':'💰 Просмотр цен','Buy_Basic_Click':'💳 Купить Basic','Buy_Premium_Click':'💳 Купить Premium','Buy_Pro_Click':'💳 Купить Pro','Voice_Recorded':'🎙 Запись голоса','NDA_Signed':'✅ NDA подпись','WhatsApp_Telegram_Captured':'📱 Ввод WhatsApp/TG','Engaged_30s':'⏱ 30с на сайте','Engaged_60s':'⏱ 60с на сайте','Engaged_120s':'⏱ 2мин на сайте','Emergency_Click':'🚨 Экстренный','Auth_Modal_Opened':'🔐 Вход','CustDev_Submitted':'📝 Опрос'};
+  const lm={'Page_View':'👁 Заход на сайт','Generate_Click':'✨ Генерация медитации','Play_Click':'▶ Воспроизведение','Pricing_Viewed':'💰 Просмотр цен','Buy_Basic_Click':'💳 Купить Basic','Buy_Premium_Click':'💳 Купить Premium','Buy_Pro_Click':'💳 Купить Pro','Voice_Recorded':'🎙 Запись голоса','NDA_Signed':'✅ NDA подпись','WhatsApp_Telegram_Captured':'📱 Ввод WhatsApp/TG','BillingCycle_Toggled':'🔄 Переключение Год/Месяц','Engaged_30s':'⏱ 30с на сайте','Engaged_60s':'⏱ 60с на сайте','Engaged_120s':'⏱ 2мин на сайте','Emergency_Click':'🚨 Экстренный','Auth_Modal_Opened':'🔐 Вход','CustDev_Submitted':'📝 Опрос'};
   function gc(n){for(const[k,v] of Object.entries(cm))if(n.includes(k))return v;return '#64748B';}
   document.getElementById('btn-wrap').innerHTML=sorted.map(([n,c])=>{
     const p=Math.round(c/mx*100);
