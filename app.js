@@ -1265,9 +1265,26 @@ function handleCustDevSubmit(e) {
 }
 
 // Pricing Toggle (Monthly vs Annual)
-function toggleBillingCycle() {
-  const isAnnual = document.getElementById('billing-switch').checked;
+function setCardBilling(cycle) {
+  const isAnnual = (cycle === 'annual');
+  toggleBillingCycle(isAnnual);
+}
+
+function toggleBillingCycle(forcedAnnual) {
+  const switchEl = document.getElementById('billing-switch');
+  const isAnnual = (typeof forcedAnnual === 'boolean') ? forcedAnnual : (switchEl ? switchEl.checked : false);
   appState.isAnnualBilling = isAnnual;
+  if (switchEl) switchEl.checked = isAnnual;
+
+  document.querySelectorAll('.card-cycle-btn').forEach(btn => {
+    if (isAnnual) {
+      if (btn.classList.contains('btn-annual')) btn.classList.add('active');
+      else btn.classList.remove('active');
+    } else {
+      if (btn.classList.contains('btn-monthly')) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  });
 
   const basicPrice   = document.querySelector('.price-basic');
   const premiumPrice = document.querySelector('.price-premium');
@@ -1580,3 +1597,4 @@ window.simulateSocialAuth = simulateSocialAuth;
 window.generatePersonalMeditation = generatePersonalMeditation;
 window.toggleVoiceRecord = toggleVoiceRecord;
 window.clearSignatureCanvas = clearSignatureCanvas;
+window.setCardBilling = setCardBilling;
