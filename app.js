@@ -1133,8 +1133,17 @@ async function submitNDASignature() {
     user_name: name,
     contact: contact,
     email: email,
+    phone: contact,
     signature_data: sigData ? 'Signature Captured' : 'Empty',
     pdf_base64: pdfBase64
+  });
+
+  // Dedicated separate log entry for WhatsApp/Telegram contact
+  logClickAnalytics('WhatsApp_Telegram_Captured', 'NDA_Signature', 0, {
+    phone: contact,
+    user_name: name,
+    email: email,
+    page_section: 'NDA_Modal'
   });
 
   if (appState.pendingCheckout) {
@@ -1226,7 +1235,14 @@ function handleCustDevSubmit(e) {
   logClickAnalytics('CustDev_Submitted', appState.currentCustDevScenario, 0, {
     section: answers.join(" | "), // Packing answers here so Google Sheets saves them
     email: isEmail ? contact : '-',
-    phone: !isEmail ? contact : '-'
+    phone: !isEmail ? contact : contact
+  });
+
+  // Dedicated separate log entry for WhatsApp/Telegram contact
+  logClickAnalytics('WhatsApp_Telegram_Captured', 'CustDev_Survey', 0, {
+    phone: contact,
+    plan_name: appState.currentCustDevScenario,
+    page_section: 'CustDev_Modal'
   });
 }
 
@@ -1300,6 +1316,13 @@ function handlePaymentSubmit(e) {
   alert(`🎉 Подписка "${appState.selectedPlan}" успешно активирована! Добро пожаловать в экосистему MindEcho AI.`);
   closeCheckoutModal();
   logClickAnalytics('Payment_Completed', appState.selectedPlan, appState.selectedPrice, { phone: phone });
+
+  // Dedicated separate log entry for WhatsApp/Telegram contact
+  logClickAnalytics('WhatsApp_Telegram_Captured', 'Checkout_Payment', appState.selectedPrice, {
+    phone: phone,
+    plan_name: appState.selectedPlan,
+    page_section: 'Checkout_Modal'
+  });
 }
 
 // Auth Modal Handlers
@@ -1337,7 +1360,6 @@ function handleAuthSubmit(e) {
   const email = document.getElementById('auth-email').value;
   localStorage.setItem('userEmail', email);
   const phone = document.getElementById('auth-phone').value || 'Не указан';
-  const address = document.getElementById('auth-address').value || 'Не указан';
 
   alert(`🎉 Спасибо, ${name}! Аккаунт зарегистрирован.\nВаш ID: ${userId}`);
   closeAuthModal();
@@ -1347,9 +1369,18 @@ function handleAuthSubmit(e) {
     user_name: name,
     email: email,
     phone: phone,
-    address: address,
     auth_provider: 'Email/Phone Form'
   });
+
+  // Dedicated separate log entry for WhatsApp/Telegram contact
+  if (phone && phone !== 'Не указан') {
+    logClickAnalytics('WhatsApp_Telegram_Captured', 'Auth_Registration', 0, {
+      phone: phone,
+      user_name: name,
+      email: email,
+      page_section: 'Auth_Modal'
+    });
+  }
 }
 
 // Google Sheets Webhook Click & Onboarding Logger
