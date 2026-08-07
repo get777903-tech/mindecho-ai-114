@@ -434,6 +434,10 @@
           <div class="plan-header">
             <h3 data-i18n="plan_title_basic">Базовый</h3>
             <p data-i18n="plan_basic_sub">Для ежедневных подстроек</p>
+            <div class="card-billing-toggle">
+              <button class="card-cycle-btn btn-monthly active" onclick="setCardBilling('monthly')" data-i18n="billing_monthly">Ежемесячно</button>
+              <button class="card-cycle-btn btn-annual" onclick="setCardBilling('annual')" data-i18n="billing_annual">Оплата за год <span class="discount-badge">-67% Скидка</span></button>
+            </div>
             <div class="plan-price price-basic">$7 <span data-i18n="plan_per_month">/ месяц</span></div>
             <div class="annual-subtext price-basic-annual hidden">$29.99 / год ($2.49/мес)</div>
           </div>
@@ -452,6 +456,10 @@
           <div class="plan-header">
             <h3 data-i18n="plan_title_premium">Премиум</h3>
             <p data-i18n="plan_premium_sub">Полный покой и гармония семьи</p>
+            <div class="card-billing-toggle">
+              <button class="card-cycle-btn btn-monthly active" onclick="setCardBilling('monthly')" data-i18n="billing_monthly">Ежемесячно</button>
+              <button class="card-cycle-btn btn-annual" onclick="setCardBilling('annual')" data-i18n="billing_annual">Оплата за год <span class="discount-badge">-67% Скидка</span></button>
+            </div>
             <div class="plan-price price-premium">$14.99 <span data-i18n="plan_per_month">/ месяц</span></div>
             <div class="annual-subtext price-premium-annual hidden">$59.99 / год ($4.99/мес)</div>
           </div>
@@ -469,6 +477,10 @@
           <div class="plan-header">
             <h3 data-i18n="plan_title_platinum">Платиновый</h3>
             <p data-i18n="plan_plat_sub">Максимальный ресурс и поддержка</p>
+            <div class="card-billing-toggle">
+              <button class="card-cycle-btn btn-monthly active" onclick="setCardBilling('monthly')" data-i18n="billing_monthly">Ежемесячно</button>
+              <button class="card-cycle-btn btn-annual" onclick="setCardBilling('annual')" data-i18n="billing_annual">Оплата за год <span class="discount-badge">-67% Скидка</span></button>
+            </div>
             <div class="plan-price price-platinum">$24.99 <span data-i18n="plan_per_month">/ месяц</span></div>
             <div class="annual-subtext price-platinum-annual hidden">$99.99 / год ($8.33/мес)</div>
           </div>
@@ -761,7 +773,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="app.js?v=20260807_v114_fix101"></script>
+  <script src="app.js?v=20260808_cardtoggle_v1"></script>
   <script>
     function openGamesModal() {
       document.getElementById('games-modal').classList.remove('hidden');
