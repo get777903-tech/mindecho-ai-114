@@ -647,7 +647,7 @@ const BASE_MEDITATION_TEMPLATE_HE = `
 פקחי עיניים וחייכי לחיים, ואז הם יחייכו אלייך בחזרה. פקחי עיניים עם חיוך רחב, תוך תחושת מוכנות ליום נפלא ומאושר.
 `;
 
-// Initialize Page Load & Canvas Pad
+// Initialize Signature Canvas & Setup Listeners on Load
 document.addEventListener('DOMContentLoaded', () => {
   setupScrollListener();
   registerServiceWorker();
@@ -655,6 +655,32 @@ document.addEventListener('DOMContentLoaded', () => {
   initSignatureCanvas();
   initAnalyticsTracking(); // 📊 Full analytics: Page_View, scroll %, time, pricing view
 });
+
+// Explicit Global Window Binds for HTML Inline Event Handlers
+window.openNDAModal = openNDAModal;
+window.closeNDAModal = closeNDAModal;
+window.submitNDASignature = submitNDASignature;
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+window.handleAuthSubmit = handleAuthSubmit;
+window.openCustDevModal = openCustDevModal;
+window.closeCustDevModal = closeCustDevModal;
+window.handleCustDevSubmit = handleCustDevSubmit;
+window.selectCustDevScenario = selectCustDevScenario;
+window.selectPlan = selectPlan;
+window.closeCheckoutModal = closeCheckoutModal;
+window.handlePaymentSubmit = handlePaymentSubmit;
+window.openGamesModal = openGamesModal;
+window.closeGamesModal = closeGamesModal;
+window.playQuickTestAudio = playQuickTestAudio;
+window.selectAudioMode = selectAudioMode;
+window.toggleBillingCycle = toggleBillingCycle;
+window.switchLanguage = switchLanguage;
+window.scrollToSection = scrollToSection;
+window.simulateSocialAuth = simulateSocialAuth;
+window.generatePersonalMeditation = generatePersonalMeditation;
+window.toggleVoiceRecord = toggleVoiceRecord;
+window.clearSignatureCanvas = clearSignatureCanvas;
 
 // Initialize Audio Element
 function initAudioPlayer() {
@@ -679,11 +705,15 @@ function initAudioPlayer() {
 }
 
 // 100% Multilingual Switcher (RU, EN, HE)
-function switchLanguage(langKey) {
+function switchLanguage(langKey, btnEl) {
   appState.lang = langKey;
   
   document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  if (btnEl) {
+    btnEl.classList.add('active');
+  } else if (typeof event !== 'undefined' && event && event.target) {
+    event.target.classList.add('active');
+  }
 
   if (langKey === 'he') {
     document.documentElement.setAttribute('dir', 'rtl');
@@ -1073,12 +1103,15 @@ function clearSignatureCanvas() {
 }
 
 function openNDAModal() {
-  document.getElementById('nda-modal').classList.remove('hidden');
+  const modal = document.getElementById('nda-modal');
+  if (modal) modal.classList.remove('hidden');
+  initSignatureCanvas();
   logClickAnalytics('NDAModal_Opened', 'NDA_Form', 0);
 }
 
 function closeNDAModal() {
-  document.getElementById('nda-modal').classList.add('hidden');
+  const modal = document.getElementById('nda-modal');
+  if (modal) modal.classList.add('hidden');
 }
 
 async function submitNDASignature() {
