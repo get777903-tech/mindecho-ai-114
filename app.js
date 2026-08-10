@@ -48,25 +48,38 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnalyticsTracking();
 });
 
+function updatePlayButtonsState(isPlaying) {
+  appState.isPlayingAudio = isPlaying;
+  const playBtn1 = document.getElementById('play-btn');
+  const playBtn2 = document.getElementById('hero-play-btn');
+  const iconText = isPlaying ? "⏸" : "▶";
+  if (playBtn1) playBtn1.innerText = iconText;
+  if (playBtn2) playBtn2.innerText = iconText;
+}
+
 // Initialize Audio Element
 function initAudioPlayer() {
-  appState.audioTrack = new Audio(MEDITATION_AUDIO_SRC);
+  if (!appState.audioTrack) {
+    appState.audioTrack = new Audio(MEDITATION_AUDIO_SRC);
+  }
 
   appState.audioTrack.addEventListener('timeupdate', () => {
     if (appState.audioTrack && appState.audioTrack.duration) {
       const progress = (appState.audioTrack.currentTime / appState.audioTrack.duration) * 100;
-      document.getElementById('player-progress').style.width = `${progress}%`;
+      const progBar = document.getElementById('player-progress');
+      if (progBar) progBar.style.width = `${progress}%`;
       
       const currentMin = Math.floor(appState.audioTrack.currentTime / 60);
       const currentSec = Math.floor(appState.audioTrack.currentTime % 60).toString().padStart(2, '0');
-      document.getElementById('player-time').innerText = `${currentMin}:${currentSec}`;
+      const timeEl = document.getElementById('player-time');
+      if (timeEl) timeEl.innerText = `${currentMin}:${currentSec}`;
     }
   });
 
   appState.audioTrack.addEventListener('ended', () => {
-    appState.isPlayingAudio = false;
-    document.getElementById('play-btn').innerText = "▶";
-    document.getElementById('player-progress').style.width = "100%";
+    updatePlayButtonsState(false);
+    const progBar = document.getElementById('player-progress');
+    if (progBar) progBar.style.width = "100%";
   });
 }
 
@@ -808,9 +821,9 @@ function playParentRecordedVoice() {
 
   if (appState.recordedAudioUrl) {
     const parentAudio = new Audio(appState.recordedAudioUrl);
-    appState.isPlayingAudio = true;
-    document.getElementById('play-btn').innerText = "⏸";
-    document.getElementById('player-subtitle').innerText = "🎙 Озвучивание записанным голосом родителя!";
+    updatePlayButtonsState(true);
+    const subEl = document.getElementById('player-subtitle');
+    if (subEl) subEl.innerText = "🎙 Озвучивание записанным голосом родителя!";
 
     parentAudio.play().catch(err => {
       console.warn("Parent recorded audio play error:", err);
@@ -818,11 +831,9 @@ function playParentRecordedVoice() {
     });
 
     parentAudio.onended = () => {
-      appState.isPlayingAudio = false;
-      document.getElementById('play-btn').innerText = "▶";
+      updatePlayButtonsState(false);
     };
   } else {
-    alert("🎙 Вы еще не записали свой голос! Нажмите микрофон слева для записи отрывка вашего голоса.");
     playMP3AudioTrack(true);
   }
 }
@@ -837,11 +848,10 @@ function playMP3AudioTrack(forceStart = false) {
   if (forceStart) {
     appState.audioTrack.currentTime = 0;
     appState.audioTrack.play().then(() => {
-      appState.isPlayingAudio = true;
-      document.getElementById('play-btn').innerText = "⏸";
+      updatePlayButtonsState(true);
     }).catch(err => {
       console.warn("MP3 playback fallback to speech synth:", err);
-      const text = document.getElementById('meditation-text-box').innerText;
+      const text = document.getElementById('meditation-text-box')?.innerText || "Закрой глаза и обрати внимание на свой нос...";
       speakTextTTS(text);
     });
     return;
@@ -849,15 +859,13 @@ function playMP3AudioTrack(forceStart = false) {
 
   if (appState.isPlayingAudio) {
     appState.audioTrack.pause();
-    appState.isPlayingAudio = false;
-    document.getElementById('play-btn').innerText = "▶";
+    updatePlayButtonsState(false);
   } else {
     appState.audioTrack.play().then(() => {
-      appState.isPlayingAudio = true;
-      document.getElementById('play-btn').innerText = "⏸";
+      updatePlayButtonsState(true);
     }).catch(err => {
       console.warn("MP3 playback fallback to speech synth:", err);
-      const text = document.getElementById('meditation-text-box').innerText;
+      const text = document.getElementById('meditation-text-box')?.innerText || "Закрой глаза и обрати внимание на свой нос...";
       speakTextTTS(text);
     });
   }
@@ -876,14 +884,9 @@ function togglePlayAudio() {
   if (appState.isPlayingAudio) {
     if (appState.audioTrack) appState.audioTrack.pause();
     if (window.speechSynthesis) window.speechSynthesis.pause();
-    appState.isPlayingAudio = false;
-    document.getElementById('play-btn').innerText = "▶";
+    updatePlayButtonsState(false);
   } else {
-    if (appState.audioTrack && appState.audioTrack.currentTime > 0) {
-      playMP3AudioTrack(false);
-    } else {
-      generatePersonalMeditation();
-    }
+    playMP3AudioTrack(true);
   }
 }
 
