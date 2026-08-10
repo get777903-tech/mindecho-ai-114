@@ -1414,3 +1414,40 @@ window.toggleVoiceRecord = toggleVoiceRecord;
 window.clearSignatureCanvas = clearSignatureCanvas;
 window.setCardBilling = setCardBilling;
 window.toggleFullStoryText = toggleFullStoryText;
+
+// Educational Modals and Conversion Event Trackers
+function openEduTutoringModal() {
+  logClickAnalytics('Click_Btn_Tutoring', 'Tutoring_Page_Open', 0, { section: 'edu_tutoring' });
+  const modal = document.getElementById('edu-tutoring-modal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeEduTutoringModal() {
+  const modal = document.getElementById('edu-tutoring-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function openEduSchoolModal() {
+  logClickAnalytics('Click_Btn_School', 'School_Page_Open', 0, { section: 'edu_school' });
+  const modal = document.getElementById('edu-school-modal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeEduSchoolModal() {
+  const modal = document.getElementById('edu-school-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function trackAndSelectPlan(position, serviceName) {
+  logClickAnalytics('Click_Choose_Plan', serviceName + '_' + position, 0, { section: serviceName });
+  closeEduTutoringModal();
+  closeEduSchoolModal();
+  scrollToSection('pricing');
+}
+
+window.openEduTutoringModal = openEduTutoringModal;
+window.closeEduTutoringModal = closeEduTutoringModal;
+window.openEduSchoolModal = openEduSchoolModal;
+window.closeEduSchoolModal = closeEduSchoolModal;
+window.trackAndSelectPlan = trackAndSelectPlan;
+
