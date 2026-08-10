@@ -94,13 +94,24 @@
             мягко растворяет дневной стресс, снятие тревог и развитие эмоционального интеллекта (EQ) ребенка прямо в процессе засыпания .
           </p>
 
-          <!-- Перемещенные 2 кнопки на одной строчке ВМЕСТО "Поддержать проект / получить ссылку" -->
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 160px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_games">
-              🎮 Игры развивающие речь + эмоциональный интеллект
+          <!-- 5 Кнопок Главного Меню -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+            <a href="games.html" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 150px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 14px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_games_speech">
+              🗣️ Игры, развивающие речь
             </a>
-            <button class="btn btn-primary btn-md" onclick="scrollToSection('generator')" style="flex: 1; min-width: 160px; justify-content: center; padding: 12px 16px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_prayer">
-              🙏 Создание молитвы-медитации
+            <a href="games.html#eq" onclick="openGamesModal(); return false;" class="btn btn-secondary btn-md" style="flex: 1; min-width: 150px; text-align: center; justify-content: center; text-decoration: none; padding: 12px 14px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_games_eq">
+              🧠 Эмоциональный интеллект
+            </a>
+            <button class="btn btn-primary btn-md" onclick="scrollToSection('generator')" style="flex: 1; min-width: 150px; justify-content: center; padding: 12px 14px; font-weight: 700; background: #a855f7; border: none; color: #fff;" data-i18n="btn_prayer">
+              🕊️ Создание молитвы-медитации
+            </button>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-md" onclick="openEduTutoringModal()" style="flex: 1; min-width: 220px; justify-content: center; padding: 12px 14px; font-weight: 700; background: #3b82f6; border: none; color: #fff;">
+              📚 ИИ репетиторство и Внешкольное образование. Выбрать тарифный план
+            </button>
+            <button class="btn btn-secondary btn-md" onclick="openEduSchoolModal()" style="flex: 1; min-width: 220px; justify-content: center; padding: 12px 14px; font-weight: 700; background: #10b981; border: none; color: #fff;">
+              🚀 Удалённая система образования. Выбрать тарифный план
             </button>
           </div>
         </div>
@@ -772,6 +783,80 @@
       <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
         <a href="games.html" class="btn btn-secondary btn-block" style="text-decoration: none; text-align: center; flex: 1; min-width: 200px;">📄 Открыть на отдельной странице</a>
         <button class="btn btn-primary btn-orange btn-block" onclick="closeGamesModal(); scrollToSection('generator');" style="flex: 1; min-width: 200px;">✨ Создать медитацию</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Tutoring & Extracurricular Education -->
+  <div id="edu-tutoring-modal" class="modal-backdrop hidden">
+    <div class="modal-card glass-card" style="max-width: 750px; max-height: 85vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closeEduTutoringModal()">✕</button>
+      
+      <!-- TOP BUTTON -->
+      <div style="margin-bottom: 20px; text-align: center;">
+        <button class="btn btn-primary btn-block btn-orange btn-lg" onclick="trackAndSelectPlan('Top', 'ИИ репетиторство и Внешкольное образование')" style="font-size: 15px; padding: 14px; box-shadow: 0 4px 15px rgba(255,107,0,0.4);">
+          💎 ИИ репетиторство и Внешкольное образование. Выбрать тарифный план
+        </button>
+      </div>
+
+      <h3 style="font-size: 24px; margin-bottom: 8px; color: #fff;">📚 ИИ репетиторство и Внешкольное образование</h3>
+      <p class="modal-subtitle" style="font-size: 14px; margin-bottom: 20px; color: var(--text-muted);">
+        Школьная программа по главным предметам без слез, зубрежки и дорогих репетиторов за $50/час!
+      </p>
+
+      <div style="text-align: left; background: rgba(255,255,255,0.04); border: 1px solid var(--bg-card-border); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+        <h4 style="font-size: 18px; color: #3b82f6; margin-bottom: 12px;">🌟 Ключевые возможности модуля:</h4>
+        <ul style="line-height: 1.7; font-size: 14px; color: #e2e8f0; padding-left: 20px;">
+          <li style="margin-bottom: 10px;"><strong>⏱️ Правило 2 часов (2-Hour Mastery):</strong> За счет адаптивного ИИ ребенок усваивает всю школьную программу (математика, языки, естественные науки) за 2 часа в день со 100% пониманием предмета.</li>
+          <li style="margin-bottom: 10px;"><strong>🧠 Сократовский ИИ-Репетитор:</strong> Не дает готовые ответы, а задает наводящие вопросы и ведет ребенка к самостоятельному пониманию.</li>
+          <li style="margin-bottom: 10px;"><strong>🔍 Ликвидация «пробелов» за 15 минут:</strong> Точно определяет слабую тему прошлых классов и подтягивает её без бессмысленной зубрежки.</li>
+          <li style="margin-bottom: 10px;"><strong>🎙️ Озвучка родным голосом родителя:</strong> Пояснения сложных формул успокаивающим голосом мамы или папы снижают учебную тревожность.</li>
+          <li style="margin-bottom: 10px;"><strong>💡 Развитие Soft Skills & EQ:</strong> Параллельное обучение критическому мышлению, ораторскому искусству и эмоциональной саморегуляции.</li>
+        </ul>
+      </div>
+
+      <!-- BOTTOM BUTTON -->
+      <div style="margin-top: 20px; text-align: center;">
+        <button class="btn btn-primary btn-block btn-orange btn-lg" onclick="trackAndSelectPlan('Bottom', 'ИИ репетиторство и Внешкольное образование')" style="font-size: 15px; padding: 14px; box-shadow: 0 4px 15px rgba(255,107,0,0.4);">
+          💎 ИИ репетиторство и Внешкольное образование. Выбрать тарифный план
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Remote School System -->
+  <div id="edu-school-modal" class="modal-backdrop hidden">
+    <div class="modal-card glass-card" style="max-width: 750px; max-height: 85vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closeEduSchoolModal()">✕</button>
+      
+      <!-- TOP BUTTON -->
+      <div style="margin-bottom: 20px; text-align: center;">
+        <button class="btn btn-primary btn-block btn-orange btn-lg" onclick="trackAndSelectPlan('Top', 'Удалённая система образования')" style="font-size: 15px; padding: 14px; box-shadow: 0 4px 15px rgba(255,107,0,0.4);">
+          💎 Удалённая система образования. Выбрать тарифный план
+        </button>
+      </div>
+
+      <h3 style="font-size: 24px; margin-bottom: 8px; color: #fff;">🚀 Удалённая система образования с ИИ-ассистентом</h3>
+      <p class="modal-subtitle" style="font-size: 14px; margin-bottom: 20px; color: var(--text-muted);">
+        Полноценная автономная экосистема семейного обучения. Школьная программа за 2 часа в день + 4 часа на проекты, творчество и эмоциональный интеллект!
+      </p>
+
+      <div style="text-align: left; background: rgba(255,255,255,0.04); border: 1px solid var(--bg-card-border); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+        <h4 style="font-size: 18px; color: #10b981; margin-bottom: 12px;">🌟 Ключевые возможности модуля:</h4>
+        <ul style="line-height: 1.7; font-size: 14px; color: #e2e8f0; padding-left: 20px;">
+          <li style="margin-bottom: 10px;"><strong>⏱️ Учеба за 2 часа в день (2-Hour Mastery):</strong> ИИ составлять индивидуальную траекторию, позволяя пройти годовую программу в 2–3 раза быстрее сверстников со 100% успеваемостью.</li>
+          <li style="margin-bottom: 10px;"><strong>🤖 ИИ-Коуч состояний:</strong> Персональный ИИ-аватар отслеживает фокус внимания, эмоциональный комфорт и предотвращает переутомление.</li>
+          <li style="margin-bottom: 10px;"><strong>🎨 Формирование мышления Создателя (Creator Mindset):</strong> Ребенок учится управлять ИИ, публично выступать, создавать свои проекты и финансово мыслить.</li>
+          <li style="margin-bottom: 10px;"><strong>🌍 Полная свобода для семьи:</strong> Учитесь из любой точки мира без привязки к школьным стенам, буллингу и бюрократии.</li>
+          <li style="margin-bottom: 10px;"><strong>📊 Прозрачный дашборд для родителей:</strong> Инфографика реального графа знаний ребенка в 1 клик без формальных оценок.</li>
+        </ul>
+      </div>
+
+      <!-- BOTTOM BUTTON -->
+      <div style="margin-top: 20px; text-align: center;">
+        <button class="btn btn-primary btn-block btn-orange btn-lg" onclick="trackAndSelectPlan('Bottom', 'Удалённая система образования')" style="font-size: 15px; padding: 14px; box-shadow: 0 4px 15px rgba(255,107,0,0.4);">
+          💎 Удалённая система образования. Выбрать тарифный план
+        </button>
       </div>
     </div>
   </div>
