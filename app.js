@@ -1548,3 +1548,62 @@ window.closeEduTutoringModal = closeEduTutoringModal;
 window.openEduSchoolModal = openEduSchoolModal;
 window.closeEduSchoolModal = closeEduSchoolModal;
 window.trackAndSelectPlan = trackAndSelectPlan;
+
+// Educational Billing Toggle & Subject Payment Handlers
+appState.eduBillingState = {
+  Tutoring: 'monthly',
+  School: 'monthly'
+};
+
+function setEduBillingCycle(btnEl, planType, cycle) {
+  const parentToggle = btnEl.parentElement;
+  if (parentToggle) {
+    parentToggle.querySelectorAll('.card-cycle-btn').forEach(b => b.classList.remove('active'));
+  }
+  btnEl.classList.add('active');
+
+  if (!appState.eduBillingState) appState.eduBillingState = {};
+  appState.eduBillingState[planType] = cycle;
+
+  const card = btnEl.closest('.pricing-card');
+  if (card) {
+    const monthlyPriceEl = card.querySelector(`.price-${planType.toLowerCase()}-monthly`);
+    const annualPriceEl = card.querySelector(`.price-${planType.toLowerCase()}-annual`);
+
+    if (cycle === 'annual') {
+      if (monthlyPriceEl) monthlyPriceEl.classList.add('hidden');
+      if (annualPriceEl) annualPriceEl.classList.remove('hidden');
+    } else {
+      if (monthlyPriceEl) monthlyPriceEl.classList.remove('hidden');
+      if (annualPriceEl) annualPriceEl.classList.add('hidden');
+    }
+  }
+
+  logClickAnalytics('EduBillingCycle_Toggled', planType + '_' + cycle, 0);
+}
+
+function submitEduSubjectOrder(planType) {
+  const cycle = (appState.eduBillingState && appState.eduBillingState[planType]) ? appState.eduBillingState[planType] : 'monthly';
+  let price = 0;
+  let planName = '';
+
+  if (planType === 'Tutoring') {
+    const subjectEl = document.getElementById('extracurricular-subject-select');
+    const subjectText = subjectEl ? subjectEl.options[subjectEl.selectedIndex].text : 'Предметное ИИ-Репетиторство';
+    price = (cycle === 'annual') ? 790 : 90;
+    planName = `Внешкольное Обучение: ${subjectText}`;
+  } else {
+    price = (cycle === 'annual') ? 4900 : 340;
+    planName = 'Удалённое Школьное Обучение';
+  }
+
+  appState.selectedPlan = planName;
+  appState.selectedPrice = price;
+
+  logClickAnalytics('EduPlan_Selected', planName + '_' + (cycle === 'annual' ? 'Annual' : 'Monthly'), price);
+  openNDAModal();
+}
+
+window.setEduBillingCycle = setEduBillingCycle;
+window.submitEduSubjectOrder = submitEduSubjectOrder;
+
