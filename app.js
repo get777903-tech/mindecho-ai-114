@@ -7,8 +7,10 @@
 const supabaseUrl = 'https://yslrofsjeujsftlabuqn.supabase.co/rest/v1/analytics_events';
 const supabaseKey = 'sb_publishable_tnc4wA3Cr-FtaDyjVz9Q6Q_fklMPSDr';
 
-// Audio Track File Name
+// Audio Track File Names & External Repositories
 const MEDITATION_AUDIO_SRC = "meditation1.mp3";
+const MORNING_AUDIO_STANDARD_URL = "https://raw.githubusercontent.com/get777903-tech/mindecho-ai-115/main/audio/meditation%20good%20morning1.mp3";
+
 
 // Unique session ID for this visit
 const SESSION_ID = 'sess_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
@@ -1604,6 +1606,19 @@ function submitEduSubjectOrder(planType) {
   openNDAModal();
 }
 
+function downloadStandardMorningAudio() {
+  logClickAnalytics('Download_Standard_Morning_Audio', 'meditation_good_morning1.mp3', 0);
+  const link = document.createElement('a');
+  link.href = MORNING_AUDIO_STANDARD_URL;
+  link.download = 'meditation_good_morning1.mp3';
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 window.setEduBillingCycle = setEduBillingCycle;
 window.submitEduSubjectOrder = submitEduSubjectOrder;
+window.downloadStandardMorningAudio = downloadStandardMorningAudio;
+
 
